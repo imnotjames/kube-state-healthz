@@ -6,6 +6,8 @@ import (
 	"github.com/spf13/cobra"
 	v12 "k8s.io/api/apps/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	labels "k8s.io/apimachinery/pkg/labels"
+
 	"k8s.io/client-go/kubernetes"
 	v1 "k8s.io/client-go/kubernetes/typed/apps/v1"
 	"k8s.io/client-go/rest"
@@ -14,6 +16,7 @@ import (
 )
 
 var KubeconfigPath string
+var Selector string
 var Namespace string
 
 var rootCmd = &cobra.Command{
@@ -27,6 +30,7 @@ func init() {
 	var defaultConfigPath = clientcmd.NewDefaultClientConfigLoadingRules().GetDefaultFilename()
 
 	rootCmd.PersistentFlags().StringVarP(&KubeconfigPath, "kubeconfig", "k", defaultConfigPath, "absolute path to the kubeconfig file")
+	rootCmd.PersistentFlags().StringVarP(&Selector, "selector", "l", "", "Kubernetes Label Selector query to filter on")
 	rootCmd.PersistentFlags().StringVarP(&Namespace, "namespace", "n", "", "The Kubernetes Namespace to inspect")
 }
 
@@ -37,8 +41,15 @@ func getDeploymentsList() (*v12.DeploymentList, error) {
 		return nil, err
 	}
 
-	// TODO: Add label selector
-	var listOptions = metav1.ListOptions{}
+	selectors, err := labels.Parse(Selector)
+
+	if err != nil {
+		return nil, err
+	}
+
+	var listOptions = metav1.ListOptions{
+		LabelSelector: selectors.String(),
+	}
 
 	return deploymentsClient.List(context.TODO(), listOptions)
 }
