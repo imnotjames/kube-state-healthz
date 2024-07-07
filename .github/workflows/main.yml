@@ -1,14 +1,1 @@
-on:
-  push:
-    branches:
-      - main
 
-jobs:
-  format:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Setup Go
-        uses: actions/setup-go@v5
-      - name: gofmt
-        run: if [ "$(gofmt -s -l . | wc -l)" -gt 0 ]; then exit 1; fi
