@@ -29,9 +29,9 @@ var rootCmd = &cobra.Command{
 func init() {
 	var defaultConfigPath = clientcmd.NewDefaultClientConfigLoadingRules().GetDefaultFilename()
 
-	rootCmd.PersistentFlags().StringVarP(&KubeconfigPath, "kubeconfig", "k", defaultConfigPath, "absolute path to the kubeconfig file")
+	rootCmd.PersistentFlags().StringVarP(&KubeconfigPath, "kubeconfig", "k", defaultConfigPath, "Absolute path to the kubeconfig file")
 	rootCmd.PersistentFlags().StringVarP(&Selector, "selector", "l", "", "Kubernetes Label Selector query to filter on")
-	rootCmd.PersistentFlags().StringVarP(&Namespace, "namespace", "n", "", "The Kubernetes Namespace to inspect")
+	rootCmd.PersistentFlags().StringVarP(&Namespace, "namespace", "n", "", "Kubernetes Namespace to inspect")
 }
 
 func getDeploymentsList() (*v12.DeploymentList, error) {
