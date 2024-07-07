@@ -26,8 +26,11 @@ var checkCmd = &cobra.Command{
 
 		var healthStatus = true
 
+		fmt.Println("| Deployment | Ready | Required |")
+		fmt.Println("| --- | --- | --- |")
+		
 		for _, d := range list.Items {
-			fmt.Printf(" * %s (%d / %d)\n", d.Name, d.Status.ReadyReplicas, d.Status.Replicas)
+			fmt.Printf("| %s | %d | %d |\n", d.Name, d.Status.ReadyReplicas, d.Status.Replicas)
 
 			if d.Status.ReadyReplicas < d.Status.Replicas {
 				healthStatus = false
