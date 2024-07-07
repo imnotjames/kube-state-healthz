@@ -17,8 +17,5 @@ jobs:
         uses: actions/setup-go@v5
       - name: gofmt
         run: |
-          FORMAT_ERRORS=$(gofmt -s -l)
-          if [[ -n "${FORMAT_ERRORS}" ]]; then
-            echo "$FORMAT_ERRORS"
-            exit 1
-          fi
+          gofmt -s -l .
+          test -z $(gofmt -s -l .)
