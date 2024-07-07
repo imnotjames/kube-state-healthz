@@ -2,8 +2,9 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/spf13/cobra"
 	"os"
+
+	"github.com/spf13/cobra"
 )
 
 var Fail bool
@@ -28,7 +29,7 @@ var checkCmd = &cobra.Command{
 
 		fmt.Println("| Deployment | Ready | Required |")
 		fmt.Println("| --- | --- | --- |")
-		
+
 		for _, d := range list.Items {
 			fmt.Printf("| %s | %d | %d |\n", d.Name, d.Status.ReadyReplicas, d.Status.Replicas)
 
