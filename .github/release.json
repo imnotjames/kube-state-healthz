@@ -1,0 +1,5 @@
+{
+  "pull-request-header": "A Release PR has been automatically generated based on activity.",
+  "pull-request-footer": "Merge this pull request to cut the next release.",
+  "draft-pull-request": true
+}
