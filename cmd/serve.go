@@ -9,18 +9,18 @@ import (
 )
 
 func healthHandler(w http.ResponseWriter, r *http.Request) {
-	w.WriteHeader(http.StatusOK)
+	w.WriteHeader(http.StatusNoContent)
 }
 
 func readinessHandler(w http.ResponseWriter, r *http.Request) {
-	w.WriteHeader(http.StatusOK)
+	w.WriteHeader(http.StatusNoContent)
 }
 
 func statusHandler(w http.ResponseWriter, r *http.Request) {
 	list, err := getDeploymentsList()
 
 	if err != nil {
-		w.WriteHeader(500)
+		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
@@ -35,7 +35,7 @@ func statusHandler(w http.ResponseWriter, r *http.Request) {
 	var statusCode int
 	
 	if healthStatus {
-		statusCode = http.StatusOK
+		statusCode = http.StatusNoContent
 	} else {
 		statusCode = http.StatusBadRequest
 	}
