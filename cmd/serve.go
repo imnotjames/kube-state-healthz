@@ -39,6 +39,8 @@ func statusHandler(w http.ResponseWriter, r *http.Request) {
 	} else {
 		statusCode = http.StatusBadRequest
 	}
+	
+	log.Printf("%s %s %d\n", r.Method, r.URL.Path, statusCode)
 
 	w.WriteHeader(statusCode)
 }
