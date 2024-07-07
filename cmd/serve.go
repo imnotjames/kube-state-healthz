@@ -33,13 +33,13 @@ func statusHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var statusCode int
-	
+
 	if healthStatus {
 		statusCode = http.StatusNoContent
 	} else {
 		statusCode = http.StatusBadRequest
 	}
-	
+
 	log.Printf("%s %s %d\n", r.Method, r.URL.Path, statusCode)
 
 	w.WriteHeader(statusCode)
