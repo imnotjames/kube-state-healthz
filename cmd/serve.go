@@ -1,7 +1,6 @@
 package cmd
 
 import (
-	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
@@ -33,16 +32,15 @@ func statusHandler(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	w.Header().Set("Content-Type", "application/json")
-
+	var statusCode int
+	
 	if healthStatus {
-		w.WriteHeader(http.StatusOK)
-		json.NewEncoder(w).Encode("OK")
+		statusCode = http.StatusOK
 	} else {
-		w.WriteHeader(http.StatusBadRequest)
-		json.NewEncoder(w).Encode("NOT OK")
+		statusCode = http.StatusBadRequest
 	}
 
+	w.WriteHeader(statusCode)
 }
 
 var Host string
