@@ -1,6 +1,10 @@
 on:
   pull_request:
     branches-ignore: []
+  push:
+    branches:
+      - main
+
 
 jobs:
   format:
