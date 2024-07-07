@@ -14,4 +14,9 @@ jobs:
       - name: Setup Go
         uses: actions/setup-go@v5
       - name: gofmt
-        run: if [ "$(gofmt -s -l . | wc -l)" -gt 0 ]; then exit 1; fi
+        run: |
+          FORMAT_ERRORS=$(gofmt -s -l)
+          if [[ -n "${FORMAT_ERRORS}" ]]; then
+            echo "$FORMAT_ERRORS"
+            exit 1
+          fi
