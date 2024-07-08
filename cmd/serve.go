@@ -2,10 +2,12 @@ package cmd
 
 import (
 	"fmt"
-	"log"
+	"io"
 	"net/http"
+	"time"
 
 	"github.com/spf13/cobra"
+	"github.com/urfave/negroni"
 )
 
 func healthHandler(w http.ResponseWriter, r *http.Request) {
@@ -32,17 +34,46 @@ func statusHandler(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	var statusCode int
-
 	if healthStatus {
-		statusCode = http.StatusNoContent
+		w.WriteHeader(http.StatusNoContent)
 	} else {
-		statusCode = http.StatusBadRequest
+		w.WriteHeader(http.StatusBadRequest)
 	}
+}
 
-	log.Printf("%s %s %d\n", r.Method, r.URL.Path, statusCode)
+type RecoveryMiddleware struct{}
 
-	w.WriteHeader(statusCode)
+func (rec *RecoveryMiddleware) ServeHTTP(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
+	defer func() {
+		if err := recover(); err != nil {
+			rw.WriteHeader(http.StatusInternalServerError)
+		}
+	}()
+
+	next(rw, r)
+}
+
+type LoggerMiddleware struct {
+	out io.Writer
+}
+
+func (l *LoggerMiddleware) ServeHTTP(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
+	start := time.Now()
+
+	next(rw, r)
+
+	res := rw.(negroni.ResponseWriter)
+
+	fmt.Fprintf(
+		l.out,
+		"%s | %d | %16s | %s | %s %s\n",
+		start.Format(time.RFC3339),
+		res.Status(),
+		time.Since(start),
+		r.Host,
+		r.Method,
+		r.URL.Path,
+	)
 }
 
 var Host string
@@ -59,14 +90,21 @@ var serveCmd = &cobra.Command{
 	Use:   "serve",
 	Short: "Serve Health endpoint",
 	RunE: func(cmd *cobra.Command, args []string) error {
-		http.HandleFunc("/", statusHandler)
-		http.HandleFunc("/healthz", healthHandler)
-		http.HandleFunc("/readyz", readinessHandler)
+		out := cmd.OutOrStdout()
 
-		var Listen string = fmt.Sprintf("%s:%d", Host, Port)
+		router := http.NewServeMux()
+		router.HandleFunc("/", statusHandler)
+		router.HandleFunc("/healthz", healthHandler)
+		router.HandleFunc("/readyz", readinessHandler)
 
-		log.Printf("Starting Server on %s\n", Listen)
-		if err := http.ListenAndServe(Listen, nil); err != nil {
+		n := negroni.New()
+		n.Use(&RecoveryMiddleware{})
+		n.Use(&LoggerMiddleware{out: out})
+		n.UseHandler(router)
+
+		fmt.Fprintf(out, "%s | Starting server on %s:%d\n", time.Now().Format(time.RFC3339), Host, Port)
+		err := http.ListenAndServe(fmt.Sprintf("%s:%d", Host, Port), n)
+		if err != nil {
 			return err
 		}
 
