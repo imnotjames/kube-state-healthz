@@ -27,8 +27,6 @@ var rootCmd = &cobra.Command{
 }
 
 func init() {
-	var defaultConfigPath = clientcmd.NewDefaultClientConfigLoadingRules().GetDefaultFilename()
-
 	rootCmd.PersistentFlags().StringVarP(&KubeconfigPath, "kubeconfig", "k", defaultConfigPath, "Absolute path to the kubeconfig file")
 	rootCmd.PersistentFlags().StringVarP(&Selector, "selector", "l", "", "Kubernetes Label Selector query to filter on")
 	rootCmd.PersistentFlags().StringVarP(&Namespace, "namespace", "n", "", "Kubernetes Namespace to inspect")
@@ -64,17 +62,31 @@ func getDeploymentsClient() (v1.DeploymentInterface, error) {
 }
 
 func getClientset() (*kubernetes.Clientset, error) {
-	config, err := rest.InClusterConfig()
-	if err == nil {
-		return kubernetes.NewForConfig(config)
-	}
+	var config, err = getKubeConfig()
 
-	config, err = clientcmd.BuildConfigFromFlags("", KubeconfigPath)
 	if err != nil {
 		return nil, err
 	}
 
 	return kubernetes.NewForConfig(config)
+}
+
+func getKubeConfig() (*rest.Config, error) {
+	if KubeconfigPath != "" {
+		// If the KubeconfigPath has been specified from the command line,
+		// always use that path no matter what
+		return clientcmd.BuildConfigFromFlags("", KubeconfigPath)
+	}
+
+	config, err := rest.InClusterConfig()
+	if err != nil {
+		// If we're in-cluster then return that config
+		return config, nil
+	}
+
+	// If nothing else, try to use the config at the default path
+	var defaultConfigPath = clientcmd.NewDefaultClientConfigLoadingRules().GetDefaultFilename()
+	return clientcmd.BuildConfigFromFlags("", defaultConfigPath)
 }
 
 func Execute() {
