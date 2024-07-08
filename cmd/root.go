@@ -15,7 +15,7 @@ import (
 	"os"
 )
 
-var KubeconfigPath string
+var KubeConfigPath string
 var Selector string
 var Namespace string
 
@@ -27,7 +27,7 @@ var rootCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.PersistentFlags().StringVarP(&KubeconfigPath, "kubeconfig", "k", defaultConfigPath, "Absolute path to the kubeconfig file")
+	rootCmd.PersistentFlags().StringVarP(&KubeConfigPath, "kubeconfig", "k", "", "Absolute path to the kubeconfig file")
 	rootCmd.PersistentFlags().StringVarP(&Selector, "selector", "l", "", "Kubernetes Label Selector query to filter on")
 	rootCmd.PersistentFlags().StringVarP(&Namespace, "namespace", "n", "", "Kubernetes Namespace to inspect")
 }
@@ -72,10 +72,10 @@ func getClientset() (*kubernetes.Clientset, error) {
 }
 
 func getKubeConfig() (*rest.Config, error) {
-	if KubeconfigPath != "" {
+	if KubeConfigPath != "" {
 		// If the KubeconfigPath has been specified from the command line,
 		// always use that path no matter what
-		return clientcmd.BuildConfigFromFlags("", KubeconfigPath)
+		return clientcmd.BuildConfigFromFlags("", KubeConfigPath)
 	}
 
 	config, err := rest.InClusterConfig()
