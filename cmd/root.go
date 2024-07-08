@@ -3,15 +3,18 @@ package cmd
 import (
 	"context"
 	"fmt"
+	"github.com/spf13/cast"
 	"github.com/spf13/cobra"
+	"github.com/spf13/pflag"
+	"github.com/spf13/viper"
 	v12 "k8s.io/api/apps/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	labels "k8s.io/apimachinery/pkg/labels"
-
+	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/client-go/kubernetes"
 	v1 "k8s.io/client-go/kubernetes/typed/apps/v1"
 	"k8s.io/client-go/rest"
 	"k8s.io/client-go/tools/clientcmd"
+	"log"
 	"os"
 )
 
@@ -24,6 +27,34 @@ var rootCmd = &cobra.Command{
 	Short: "kube-state-healthz determines the health of your cluster",
 	Long:  `Check the state of a set of deployments in kubernetes`,
 	Run:   func(cmd *cobra.Command, args []string) {},
+	PersistentPreRun: func(cmd *cobra.Command, args []string) {
+		// This is a nightmare but seems to work?
+		// I'm not totally sure what's going on here.
+		viper.SetEnvPrefix("ksh")
+		viper.AutomaticEnv()
+
+		cmd.Flags().VisitAll(func(f *pflag.Flag) {
+			if f.Changed {
+				return
+			}
+
+			viperValue := viper.Get(f.Name)
+
+			if viperValue != nil {
+				strValue, err1 := cast.ToStringE(viperValue)
+				if err1 == nil {
+					err1 = f.Value.Set(strValue)
+					if err1 != nil {
+						log.Printf("err set pflag %s from viper err: %s", f.Name, err1)
+					}
+				} else {
+					log.Printf("%s cast.ToStringE err %s", f.Name, err1)
+				}
+			}
+		})
+
+		viper.BindPFlags(cmd.Flags())
+	},
 }
 
 func init() {
