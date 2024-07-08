@@ -30,22 +30,22 @@ var checkCmd = &cobra.Command{
 		var healthStatus = true
 
 		fmt.Fprintln(out, "| Deployment | Ready | Required |")
-		fmt.FPrintln(out, "| --- | --- | --- |")
+		fmt.Fprintln(out, "| --- | --- | --- |")
 
 		for _, d := range list.Items {
-			fmt.FPrintf(out, "| %s | %d | %d |\n", d.Name, d.Status.ReadyReplicas, d.Status.Replicas)
+			fmt.Fprintf(out, "| %s | %d | %d |\n", d.Name, d.Status.ReadyReplicas, d.Status.Replicas)
 
 			if d.Status.ReadyReplicas < d.Status.Replicas {
 				healthStatus = false
 			}
 		}
 
-		fmt.FPrint(out, "\n")
+		fmt.Fprint(out, "\n")
 
 		if healthStatus {
-			fmt.FPrintln("The Cluster is **Healthy**")
+			fmt.Fprintln(out, "The Cluster is **Healthy**")
 		} else {
-			fmt.FPrintln("The Cluster is **Unhealthy**")
+			fmt.Forintln(out, "The Cluster is **Unhealthy**")
 
 			if Fail {
 				os.Exit(1)
