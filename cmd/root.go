@@ -51,10 +51,10 @@ var rootCmd = &cobra.Command{
 				if err == nil {
 					err = f.Value.Set(strValue)
 					if err != nil {
-						log.Printf("err set pflag %s from viper err: %s", f.Name, err1)
+						log.Printf("err set pflag %s from viper err: %s", f.Name, err)
 					}
 				} else {
-					log.Printf("%s cast.ToStringE err %s", f.Name, err1)
+					log.Printf("%s cast.ToStringE err %s", f.Name, err)
 				}
 			}
 		})
