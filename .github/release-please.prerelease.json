@@ -3,6 +3,7 @@
   "packages": {
     ".": {
       "prerelease": true,
+      "versioning": "prerelease",
       "prerelease-type": "rc",
       "release-type": "go",
       "include-component-in-tag": false,
