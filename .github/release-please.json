@@ -2,9 +2,6 @@
   "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json",
   "packages": {
     ".": {
-      "prerelease": true,
-      "versioning": "prerelease",
-      "prerelease-type": "rc.01",
       "release-type": "go",
       "include-component-in-tag": false,
       "pull-request-header": "A Release PR has been automatically generated based on activity.\n\n",
