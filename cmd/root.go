@@ -14,7 +14,6 @@ import (
 	v1 "k8s.io/client-go/kubernetes/typed/apps/v1"
 	"k8s.io/client-go/rest"
 	"k8s.io/client-go/tools/clientcmd"
-	"log"
 	"os"
 )
 
@@ -31,6 +30,8 @@ var rootCmd = &cobra.Command{
 		// This is a nightmare but seems to work?
 		// I'm not totally sure what's going on here
 		// but it was suggested by spf.
+
+		out := cmd.OutOrStderr()
 
 		viper.SetEnvPrefix("ksh")
 		viper.AutomaticEnv()
@@ -51,10 +52,10 @@ var rootCmd = &cobra.Command{
 				if err == nil {
 					err = f.Value.Set(strValue)
 					if err != nil {
-						log.Printf("err set pflag %s from viper err: %s", f.Name, err)
+						fmt.Fprintf(out, "err set pflag %s from viper err: %s", f.Name, err)
 					}
 				} else {
-					log.Printf("%s cast.ToStringE err %s", f.Name, err)
+					fmt.Fprintf(out, "%s cast.ToStringE err %s", f.Name, err)
 				}
 			}
 		})
