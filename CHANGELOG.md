@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.1](https://github.com/imnotjames/kube-state-healthz/compare/v1.0.0...v1.0.1) (2024-07-08)
+
+
+### Bug Fixes
+
+* handle in-cluster config without crashing ([72eb5fe](https://github.com/imnotjames/kube-state-healthz/commit/72eb5fed15a4510208506d5b3383a1dd25d6c57e))
+
 ## 1.0.0 (2024-07-08)
 
 
