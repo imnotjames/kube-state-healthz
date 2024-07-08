@@ -1,5 +1,20 @@
 # Changelog
 
+## [1.1.0-rc.1](https://github.com/imnotjames/kube-state-healthz/compare/v1.0.1...v1.1.0-rc.1) (2024-07-08)
+
+
+### Features
+
+* support env vars for all flags ([#9](https://github.com/imnotjames/kube-state-healthz/issues/9)) ([98b298a](https://github.com/imnotjames/kube-state-healthz/commit/98b298a98830cf4143f82f3e377450f22fe058ac))
+
+
+### Bug Fixes
+
+* proper print to stdout ([2fa6f41](https://github.com/imnotjames/kube-state-healthz/commit/2fa6f41fc85368a37b317c55de05bda60b1b2732))
+* proper print to stdout ([27c0064](https://github.com/imnotjames/kube-state-healthz/commit/27c00642aba29b8d1a42195cd182ff07b0069db8))
+* use cobra stdout ([#11](https://github.com/imnotjames/kube-state-healthz/issues/11)) ([9285314](https://github.com/imnotjames/kube-state-healthz/commit/9285314100f433b5aa614f024965199ed6fb01f5))
+* use correct var for error ([2c0a279](https://github.com/imnotjames/kube-state-healthz/commit/2c0a2793ccbed40ec969e7b443bf8f2485b9aa71))
+
 ## [1.1.0-rc](https://github.com/imnotjames/kube-state-healthz/compare/v1.0.1...v1.1.0-rc) (2024-07-08)
 
 
