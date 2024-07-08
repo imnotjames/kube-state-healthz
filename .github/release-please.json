@@ -4,7 +4,7 @@
     ".": {
       "prerelease": true,
       "versioning": "prerelease",
-      "prerelease-type": "beta",
+      "prerelease-type": "rc",
       "release-type": "go",
       "include-component-in-tag": false,
       "pull-request-header": "A Release PR has been automatically generated based on activity.\n\n",
