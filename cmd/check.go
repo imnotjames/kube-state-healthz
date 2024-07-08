@@ -19,6 +19,8 @@ var checkCmd = &cobra.Command{
 	Use:   "check",
 	Short: "Check kube status",
 	RunE: func(cmd *cobra.Command, args []string) error {
+		out := cmd.OutOrStdout()
+
 		list, err := getDeploymentsList()
 
 		if err != nil {
@@ -27,23 +29,23 @@ var checkCmd = &cobra.Command{
 
 		var healthStatus = true
 
-		fmt.Println("| Deployment | Ready | Required |")
-		fmt.Println("| --- | --- | --- |")
+		fmt.Fprintln(out, "| Deployment | Ready | Required |")
+		fmt.FPrintln(out, "| --- | --- | --- |")
 
 		for _, d := range list.Items {
-			fmt.Printf("| %s | %d | %d |\n", d.Name, d.Status.ReadyReplicas, d.Status.Replicas)
+			fmt.FPrintf(out, "| %s | %d | %d |\n", d.Name, d.Status.ReadyReplicas, d.Status.Replicas)
 
 			if d.Status.ReadyReplicas < d.Status.Replicas {
 				healthStatus = false
 			}
 		}
 
-		fmt.Print("\n")
+		fmt.FPrint(out, "\n")
 
 		if healthStatus {
-			fmt.Println("The Cluster is **Healthy**")
+			fmt.FPrintln("The Cluster is **Healthy**")
 		} else {
-			fmt.Println("The Cluster is **Unhealthy**")
+			fmt.FPrintln("The Cluster is **Unhealthy**")
 
 			if Fail {
 				os.Exit(1)
