@@ -45,7 +45,7 @@ var checkCmd = &cobra.Command{
 		if healthStatus {
 			fmt.Fprintln(out, "The Cluster is **Healthy**")
 		} else {
-			fmt.Forintln(out, "The Cluster is **Unhealthy**")
+			fmt.Fprintln(out, "The Cluster is **Unhealthy**")
 
 			if Fail {
 				os.Exit(1)
