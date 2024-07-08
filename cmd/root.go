@@ -29,22 +29,28 @@ var rootCmd = &cobra.Command{
 	Run:   func(cmd *cobra.Command, args []string) {},
 	PersistentPreRun: func(cmd *cobra.Command, args []string) {
 		// This is a nightmare but seems to work?
-		// I'm not totally sure what's going on here.
+		// I'm not totally sure what's going on here
+		// but it was suggested by spf.
+
 		viper.SetEnvPrefix("ksh")
 		viper.AutomaticEnv()
 
+		// Needs to happen before the command runs but after
+		// cobra runs parseFlags
 		cmd.Flags().VisitAll(func(f *pflag.Flag) {
 			if f.Changed {
+				// Only override the flag of it is
+				// set to the default value
 				return
 			}
 
 			viperValue := viper.Get(f.Name)
 
 			if viperValue != nil {
-				strValue, err1 := cast.ToStringE(viperValue)
-				if err1 == nil {
-					err1 = f.Value.Set(strValue)
-					if err1 != nil {
+				strValue, err := cast.ToStringE(viperValue)
+				if err == nil {
+					err = f.Value.Set(strValue)
+					if err != nil {
 						log.Printf("err set pflag %s from viper err: %s", f.Name, err1)
 					}
 				} else {
