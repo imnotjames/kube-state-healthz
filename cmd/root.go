@@ -79,7 +79,7 @@ func getKubeConfig() (*rest.Config, error) {
 	}
 
 	config, err := rest.InClusterConfig()
-	if err != nil {
+	if err == nil {
 		// If we're in-cluster then return that config
 		return config, nil
 	}
