@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.1.0](https://github.com/imnotjames/kube-state-healthz/compare/v1.1.0-rc.1...v1.1.0) (2024-07-09)
+
+
+### Bug Fixes
+
+* write to stderr ([b8f034a](https://github.com/imnotjames/kube-state-healthz/commit/b8f034a7a1ade7d0cfccaf29ea7d1719aa89d126))
+
+
+### Miscellaneous Chores
+
+* release 1.1.0 ([8855bc1](https://github.com/imnotjames/kube-state-healthz/commit/8855bc1f5c4064fa5598c9690783384dba3955b0))
+
 ## [1.1.0-rc.1](https://github.com/imnotjames/kube-state-healthz/compare/v1.0.1...v1.1.0-rc.1) (2024-07-08)
 
 
